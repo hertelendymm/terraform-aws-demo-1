@@ -44,13 +44,7 @@ resource "aws_security_group" "webapp_sg" {
             security_groups = [ingress.value] # Use the value from the for_each
         }   
     }
-    # ingress {
-    #     description     = "SSH from Bastion SG"
-    #     from_port       = 22
-    #     to_port         = 22
-    #     protocol        = "tcp"
-    #     security_groups = [var.bastion_sg_id]
-    # }
+
 
     # Allow all outbound traffic.
     egress {
@@ -98,7 +92,6 @@ resource "aws_lb" "webapp_nlb" {
     internal           = false
     load_balancer_type = "network"
 
-    # Corrected from subnet_mappings to subnets
     # This expects a list of one or more subnet IDs.
     subnets = [var.public_subnet_id]
     enable_cross_zone_load_balancing = true

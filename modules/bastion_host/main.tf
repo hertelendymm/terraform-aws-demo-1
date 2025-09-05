@@ -27,7 +27,7 @@ resource "aws_security_group" "bastion_sg" {
     }
 }
 
-# ... rest of the file is the same ...
+
 # This is the actual EC2 instance for the bastion host.
 resource "aws_instance" "bastion_host" {
     ami           = "ami-046c2381f11878233"
