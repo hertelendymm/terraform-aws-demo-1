@@ -1,4 +1,3 @@
-# This one allows SSH traffic only from your specified IP address.
 resource "aws_security_group" "bastion_sg" {
     name        = "${var.project_name}-bastion-sg"
     description = "Allow SSH inbound traffic from a specific IP"
