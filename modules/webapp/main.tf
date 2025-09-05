@@ -101,6 +101,7 @@ resource "aws_lb" "webapp_nlb" {
     # Corrected from subnet_mappings to subnets
     # This expects a list of one or more subnet IDs.
     subnets = [var.public_subnet_id]
+    enable_cross_zone_load_balancing = true
 }
 
 # A Target Group is a logical grouping of your EC2 instances.
