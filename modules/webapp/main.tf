@@ -27,17 +27,30 @@ resource "aws_security_group" "webapp_sg" {
         from_port   = 8080
         to_port     = 8080
         protocol    = "tcp"
-        cidr_blocks = [var.vpc_cidr_block]
+        cidr_blocks = ["0.0.0.0/0"]
+        # cidr_blocks = [var.vpc_cidr_block]
     }
 
     # Ingress rule for SSH, but only from the bastion host's security group.
-    ingress {
-        description     = "SSH from Bastion SG"
-        from_port       = 22
-        to_port         = 22
-        protocol        = "tcp"
-        security_groups = [var.bastion_sg_id]
+    dynamic "ingress" {
+    # If bastion_sg_id is null, for_each is an empty list, and nothing is created.
+    # If it has a value, for_each is a list with one element, creating one rule.
+    for_each = var.bastion_sg_id == null ? [] : [var.bastion_sg_id]
+        content {
+            description     = "SSH from Bastion SG"
+            from_port       = 22
+            to_port         = 22
+            protocol        = "tcp"
+            security_groups = [ingress.value] # Use the value from the for_each
+        }   
     }
+    # ingress {
+    #     description     = "SSH from Bastion SG"
+    #     from_port       = 22
+    #     to_port         = 22
+    #     protocol        = "tcp"
+    #     security_groups = [var.bastion_sg_id]
+    # }
 
     # Allow all outbound traffic.
     egress {

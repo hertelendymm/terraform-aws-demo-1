@@ -9,10 +9,9 @@ module "vpc" {
     project_name = var.project_name
 }
 
-module "bastion" {
+module "bastion_host" {
     source = "./modules/bastion_host"
     count = var.do_i_want_bastion ? 1 : 0
-    # count = var.number_of_bastions
 
     # Here, we pass outputs from the VPC module as inputs to the bastion module.
     # This is how modules are linked together.
@@ -38,21 +37,6 @@ module "webapp" {
 
     # Pass the bastion's security group ID to allow SSH access.
     # The [0] is necessary because the bastion is created with 'count', making it a list.
-    bastion_sg_id = module.bastion_host[0].security_group_id
+    # bastion_sg_id = module.bastion_host[0].security_group_id
+    bastion_sg_id = var.do_i_want_bastion ? module.bastion_host[0].security_group_id : null
 }
-
-
-
-# module "bastion_host" {
-#     source = "./modules/bastion_host"
-#     count = var.do_i_want_bastion ? 1 : 0
-#     subnet_id = module.vpc.public_subnet_id
-# }
-
-# resource "aws_instance" "ec2" {
-#     # ... other configuration ...
-#     ami      = "ami-0c55b159cbfafe1f0"
-#     instance_type = "t2.micro"
-
-#     key_name = aws_key_pair.main.key_name
-# }
