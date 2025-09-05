@@ -22,16 +22,16 @@ module "bastion_host" {
     aws_region       = var.aws_region
 }
 
-# Call the webapp module to create the EC2 instances and Load Balancer.
+# Calls the webapp module to create the EC2 instances and Load Balancer.
 module "webapp" {
     source = "./modules/webapp"
 
     # Pass in values from root variables and the outputs of other modules.
     project_name      = var.project_name
     vpc_id            = module.vpc.vpc_id
-    vpc_cidr_block    = module.vpc.vpc_cidr_block      # From the VPC module's new output
-    public_subnet_id  = module.vpc.public_subnet_id  # For the Load Balancer
-    private_subnet_id = module.vpc.private_subnet_id # For the EC2 instances
+    vpc_cidr_block    = module.vpc.vpc_cidr_block       # From the VPC module's new output
+    public_subnet_id  = module.vpc.public_subnet_id     # For the Load Balancer
+    private_subnet_id = module.vpc.private_subnet_id    # For the EC2 instances
     key_name          = aws_key_pair.max-bastion-key.key_name
     instance_count    = var.webapp_instance_count
 
